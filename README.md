@@ -4,5 +4,5 @@ Handcrafted Haven is an innovative web application that provides a platform for 
 ## Group Members
 * Shawn Kyne
 * Araceli Kyne
-* [Teammate 2 Name]
+* Fabian Pappa
 * [Teammate 3 Name]
