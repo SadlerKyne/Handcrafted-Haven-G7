@@ -6,3 +6,4 @@ Handcrafted Haven is an innovative web application that provides a platform for 
 * Araceli Kyne
 * Fabian Pappa
 * Nicholas Nixon
+* Favour Igein
