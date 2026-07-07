@@ -5,4 +5,4 @@ Handcrafted Haven is an innovative web application that provides a platform for 
 * Shawn Kyne
 * Araceli Kyne
 * Fabian Pappa
-* [Teammate 3 Name]
+* Nicholas Nixon
