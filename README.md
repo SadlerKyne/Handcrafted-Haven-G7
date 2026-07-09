@@ -27,7 +27,7 @@ We will be using our technical skills across a full stack (Next.js, Node, databa
 - Consistent branding (color, typography, layout)
 - Clear, logical navigation
 
-## Technical stack (this part is non-negotiable, it's specified, not suggested):
+## Technical stack:
 
 - Front-end: HTML, CSS, JS, Next.js
 - Back-end: Node.js plus a database (MongoDB)
