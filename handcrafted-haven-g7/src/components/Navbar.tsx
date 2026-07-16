@@ -1,40 +1,58 @@
+// Importing Link from Next.js.
 import Link from "next/link";
 
+// Defining my category arrays.
 const CATEGORIES = ["Jewelry", "Home & Living", "Art", "Clothing", "Woodworking", "Ceramics", "Vintage"];
 
+// Main Navbar component.
 export default function Navbar() {
   return (
+    // Semantic header with sticky positioning.
     <header className="bg-white shadow-sm sticky top-0 z-50">
+      
+      {/* Container to center the navbar. */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Flexbox layout for the 3 main sections. */}
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+          
+          {/* 1. Logo section. */}
           <div className="flex-shrink-0 flex items-center cursor-pointer">
+            {/* Link back to my homepage. */}
             <Link href="/" className="font-bold text-2xl tracking-tight text-[#274c77]">
               Handcrafted Haven
             </Link>
           </div>
 
-          {/* Search Bar */}
+          {/* 2. Search bar section. */}
+          {/* Hidden on mobile, visible on desktop. */}
           <div className="flex-1 max-w-2xl px-8 hidden md:flex">
             <div className="w-full relative">
+              {/* The search input field. */}
               <input
                 type="text"
                 placeholder="Search for anything..."
-                className="w-full bg-[#e7ecef] border border-[#8b8c89] rounded-full py-2 pl-5 pr-10 focus:outline-none focus:ring-2 focus:ring-[#6096ba] transition-shadow"
+                className="w-full bg-[#e7ecef] border border-[#8b8c89] rounded-full py-2 pl-5 pr-10 focus:outline-none focus:ring-2 focus:ring-[#6096ba]"
               />
+              {/* Search icon button. */}
               <button aria-label="Search" className="absolute right-0 top-0 mt-2 mr-4 text-[#274c77]">
                 <SearchIcon />
               </button>
             </div>
           </div>
 
-          {/* Icons */}
+          {/* 3. Icons section. */}
           <div className="flex items-center space-x-6">
+            
+            {/* User profile button. */}
             <button aria-label="User Profile" className="text-[#274c77] hover:text-[#a3cef1] transition-colors">
               <UserIcon />
             </button>
+            
+            {/* Shopping cart button. */}
             <button aria-label="Shopping Cart" className="text-[#274c77] hover:text-[#a3cef1] transition-colors relative">
               <CartIcon />
+              {/* Cart notification badge. */}
               <span className="absolute -top-2 -right-2 bg-[#6096ba] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                 2
               </span>
@@ -43,11 +61,15 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Category Navigation */}
+      {/* 4. Category navigation row. */}
       <nav className="border-t border-[#e7ecef] bg-white">
-        <ul className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-8 overflow-x-auto py-3 text-sm font-medium text-[#8b8c89] whitespace-nowrap scrollbar-hide">
+        {/* Horizontally scrollable list. */}
+        <ul className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-8 overflow-x-auto py-3 text-sm font-medium text-[#8b8c89] whitespace-nowrap">
+          
+          {/* Looping through my categories. */}
           {CATEGORIES.map((category) => (
             <li key={category} className="cursor-pointer hover:text-[#274c77] transition-colors">
+              {/* Formatting category links. */}
               <Link href={`/category/${category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`}>
                 {category}
               </Link>
@@ -59,7 +81,7 @@ export default function Navbar() {
   );
 }
 
-// Extracted SVG Components
+// SVG icons for portability.
 function SearchIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">

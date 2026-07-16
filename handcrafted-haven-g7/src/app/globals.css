@@ -1,17 +1,17 @@
 :root {
-  /* Handcrafted Haven Color Palette */
+  /* Defining my primary color palette variables. */
   --color-platinum: #e7ecef;
   --color-dusk-blue: #274c77;
   --color-steel-blue: #6096ba;
   --color-icy-blue: #a3cef1;
   --color-grey-olive: #8b8c89;
 
-  /* Structural Assignments */
+  /* Mapping my background and foreground colors. */
   --background: var(--color-platinum);
   --foreground: var(--color-dusk-blue);
 }
 
-/* Base Reset & Optimization */
+/* Resetting the default margin and padding to prevent overflow issues. */
 html,
 body {
   max-width: 100vw;
@@ -21,27 +21,32 @@ body {
   box-sizing: border-box;
 }
 
+/* Setting up the default body styling. */
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   color: var(--foreground);
   background: var(--background);
+  /* Applying the Roboto font I imported in layout.tsx. */
   font-family: var(--font-roboto), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Ensuring all elements respect the box-sizing rules. */
 *, *::before, *::after {
   box-sizing: inherit;
 }
 
+/* Styling my default anchor tags. */
 a {
   color: inherit;
   text-decoration: none;
   transition: color 0.2s ease-in-out;
 }
 
+/* Adding a subtle hover effect to my links. */
 a:hover {
   color: var(--color-icy-blue);
 }

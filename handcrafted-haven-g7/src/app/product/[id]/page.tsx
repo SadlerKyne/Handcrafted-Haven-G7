@@ -1,20 +1,17 @@
-// Importing my database query helper to fetch real data.
-import { query } from "@/lib/db";
 // Importing Link to make my product cards clickable.
 import Link from "next/link";
 
-// Making my Home component async so it can fetch data directly from Postgres.
-export default async function Home() {
-  
-  // Fetching the latest products and joining the artisan's name from the users table.
-  const { rows: products } = await query(`
-    SELECT p.id, p.title, p.price, p.category, u.name as artisan
-    FROM products p
-    JOIN users u ON p.seller_id = u.id
-    ORDER BY p.created_at DESC
-    LIMIT 8;
-  `);
+// Generating 8 mock products for the UI grid so I don't need a database yet.
+const MOCK_PRODUCTS = Array.from({ length: 8 }).map((_, i) => ({
+  id: i.toString(),
+  title: `Artisan Handcrafted Item ${i + 1}`,
+  artisan: `Maker Studio ${String.fromCharCode(65 + i)}`,
+  price: (Math.random() * 100 + 10).toFixed(2), // Random price.
+  rating: (Math.random() * 1 + 4).toFixed(1), // Random rating.
+}));
 
+// Main homepage component. Removed 'async' since I am not querying a database right now.
+export default function Home() {
   return (
     // Main background and text color wrapper.
     <div className="bg-[#e7ecef] text-[#274c77] font-sans">
@@ -53,8 +50,8 @@ export default async function Home() {
           {/* Responsive CSS grid. */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             
-            {/* Looping through my live database products. */}
-            {products.map((product) => (
+            {/* Looping through my mock products instead of database rows. */}
+            {MOCK_PRODUCTS.map((product) => (
               // Wrapping the entire card in a Link to navigate to the product details page.
               <Link 
                 href={`/product/${product.id}`} 
@@ -77,12 +74,10 @@ export default async function Home() {
                   
                   {/* Pushing price and rating to the bottom. */}
                   <div className="flex justify-between items-center pt-2 mt-auto">
-                    {/* Formatting the database decimal to currency. */}
                     <span className="font-bold text-[#274c77]">${product.price}</span>
                     <div className="flex items-center space-x-1">
-                      {/* Displaying the star icon and a hardcoded rating for now. */}
                       <StarIcon />
-                      <span className="text-sm font-medium text-[#8b8c89]">4.9</span>
+                      <span className="text-sm font-medium text-[#8b8c89]">{product.rating}</span>
                     </div>
                   </div>
                 </div>
