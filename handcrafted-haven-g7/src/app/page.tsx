@@ -11,75 +11,67 @@ export default async function Home() {
       FROM products p
       JOIN users u ON p.seller_id = u.id
       ORDER BY p.created_at DESC
-      LIMIT 8;
+      LIMIT 12;
     `);
     products = rows;
   } catch (error) {
-    // Graceful fallback if the database is offline or unconfigured
-    console.error("Database connection failed. Serving mock data.");
+    // Graceful fallback for local development
     products = [
       { id: '1', title: 'Handcrafted Wooden Bowl', price: '45.00', artisan: 'Jane Doe' },
       { id: '2', title: 'Silver Pendant Necklace', price: '120.00', artisan: 'John Smith' },
       { id: '3', title: 'Ceramic Coffee Mug', price: '25.00', artisan: 'Alice Joy' },
       { id: '4', title: 'Woven Wall Hanging', price: '65.00', artisan: 'Bob Lee' },
+      { id: '5', title: 'Vintage Leather Bag', price: '85.00', artisan: 'LeatherCrafts' },
+      { id: '6', title: 'Minimalist Ring', price: '30.00', artisan: 'JewelsByJ' },
     ];
   }
 
   return (
-    <div className="bg-[#e7ecef] text-[#274c77] font-sans">
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+    <div className="bg-white text-gray-900 font-sans">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
         
-        <section className="bg-[#274c77] rounded-2xl p-8 md:p-16 text-center shadow-lg relative overflow-hidden flex flex-col items-center justify-center min-h-[300px]">
-          
-          <div className="relative z-10 space-y-4">
-            <h1 className="text-4xl md:text-5xl font-bold text-white">
-              Discover Unique, Handmade Treasures
-            </h1>
-            <p className="text-[#a3cef1] text-lg max-w-2xl mx-auto">
-              Support independent artisans and find extraordinary items crafted with passion and precision.
-            </p>
-            <button className="mt-4 bg-[#6096ba] hover:bg-[#a3cef1] hover:text-[#274c77] text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-md">
-              Shop Now
-            </button>
-          </div>
-          
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent to-[#6096ba] opacity-20 pointer-events-none"></div>
+        {/* Etsy-style Minimalist Hero */}
+        <section className="bg-[#e7ecef] rounded-xl p-8 md:p-12 flex flex-col items-center justify-center text-center">
+          <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#274c77] mb-6">
+            Incredible things, made by incredible people.
+          </h1>
+          <button className="bg-[#274c77] hover:bg-[#6096ba] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-sm">
+            Shop Handcrafted
+          </button>
         </section>
 
+        {/* Product Grid Section */}
         <section>
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-[#274c77]">Curated Picks for You</h2>
-          </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Popular right now</h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            
+          {/* Tighter grid matching Etsy's density */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-y-8 gap-x-4">
             {products.map((product) => (
               <Link 
                 href={`/product/${product.id}`} 
                 key={product.id} 
-                className="group cursor-pointer flex flex-col bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-transparent hover:border-[#a3cef1]"
+                className="group flex flex-col cursor-pointer"
               >
-                
-                <div className="w-full aspect-[4/3] bg-[#e7ecef] relative overflow-hidden flex items-center justify-center">
-                  <span className="text-[#8b8c89] font-medium">Image Placeholder</span>
-                </div>
-                
-                <div className="p-4 flex flex-col flex-grow space-y-1">
-                  <h3 className="font-semibold text-lg text-[#274c77] truncate group-hover:text-[#6096ba] transition-colors">
-                    {product.title}
-                  </h3>
-                  <p className="text-sm text-[#8b8c89]">{product.artisan}</p>
-                  
-                  <div className="flex justify-between items-center pt-2 mt-auto">
-                    <span className="font-bold text-[#274c77]">${product.price}</span>
-                    <div className="flex items-center space-x-1">
-                      <StarIcon />
-                      <span className="text-sm font-medium text-[#8b8c89]">4.9</span>
-                    </div>
+                {/* Square Image Placeholder */}
+                <div className="w-full aspect-square bg-gray-100 rounded-lg overflow-hidden relative mb-2">
+                  <div className="absolute inset-0 flex items-center justify-center text-gray-400 group-hover:scale-105 transition-transform duration-300">
+                    Image
                   </div>
                 </div>
-
+                
+                {/* Etsy-style Typography */}
+                <h3 className="text-sm text-gray-900 font-medium truncate group-hover:underline">
+                  {product.title}
+                </h3>
+                
+                <div className="flex items-center space-x-1 my-0.5">
+                  <span className="text-xs font-bold text-gray-800">5.0</span>
+                  <StarIcon />
+                  <span className="text-xs text-gray-500">(24)</span>
+                </div>
+                
+                <span className="font-bold text-gray-900">${product.price}</span>
+                <span className="text-xs text-gray-500 truncate">{product.artisan}</span>
               </Link>
             ))}
           </div>
@@ -92,7 +84,7 @@ export default async function Home() {
 
 function StarIcon() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-[#274c77]">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3 text-gray-800">
       <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
     </svg>
   );
