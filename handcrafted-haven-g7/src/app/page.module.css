@@ -1,14 +1,13 @@
-/* src/app/page.module.css */
-
 .homeContainer {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
 }
 
-/* Hero Section Styles */
+/* Hero Section: Platinum background with Steel Blue accents */
 .heroSection {
-  background-color: #fcebd5;
+  background-color: #e7ecef; /* Platinum */
+  color: #274c77;           /* Dusk Blue text */
   padding: 60px 24px;
   border-radius: 12px;
   text-align: center;
@@ -16,7 +15,7 @@
 }
 
 .heroButton {
-  background-color: #222222;
+  background-color: #274c77; /* Dusk Blue */
   color: white;
   border: none;
   padding: 12px 24px;
@@ -26,7 +25,11 @@
   margin-top: 20px;
 }
 
-/* Grid Layout for Products */
+.heroButton:hover {
+  background-color: #6096ba; /* Steel Blue on hover */
+}
+
+/* Product Grid */
 .productGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -34,36 +37,36 @@
   margin-top: 24px;
 }
 
-/* Card Styles */
 .productCard {
   text-decoration: none;
   color: #222;
   display: block;
-  border: 1px solid transparent;
-  padding: 8px;
-  transition: border 0.2s ease;
+  border: 1px solid #e7ecef; /* Platinum border */
+  padding: 12px;
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease;
 }
 
 .productCard:hover {
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(96, 150, 186, 0.2); /* Steel Blue shadow */
 }
 
 .productImage {
   width: 100%;
   aspect-ratio: 1/1;
-  background-color: #f1f1f1;
-  border-radius: 8px;
+  background-color: #a3cef1; /* Icy Blue placeholder */
+  border-radius: 4px;
   margin-bottom: 8px;
 }
 
 .productTitle {
   font-size: 0.9rem;
   margin: 4px 0;
-  font-weight: 500;
+  color: #8b8c89; /* Grey Olive */
 }
 
 .productPrice {
   font-weight: bold;
   font-size: 1.1rem;
+  color: #274c77; /* Dusk Blue */
 }
