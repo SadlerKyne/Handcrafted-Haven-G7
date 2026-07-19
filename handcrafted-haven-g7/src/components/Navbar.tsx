@@ -1,107 +1,60 @@
-// Importing Link from Next.js.
+"use client";
+import { useState } from "react";
 import Link from "next/link";
+import { User, ShoppingCart, Search, Menu, X } from "lucide-react";
 
-// Defining my category arrays.
-const CATEGORIES = ["Jewelry", "Home & Living", "Art", "Clothing", "Woodworking", "Ceramics", "Vintage"];
-
-// Main Navbar component.
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    // Semantic header with sticky positioning.
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      
-      {/* Container to center the navbar. */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="bg-white border-b border-gray-200 w-full">
+      {/* Removed 'max-w-[800px]' so it fills the screen width */}
+      <div className="w-full px-6">
         
-        {/* Flexbox layout for the 3 main sections. */}
-        <div className="flex justify-between items-center h-16">
+        {/* Changed 'justify-center' to 'justify-between' to use full width */}
+        <div className="flex items-center justify-between h-20">
           
-          {/* 1. Logo section. */}
-          <div className="flex-shrink-0 flex items-center cursor-pointer">
-            {/* Link back to my homepage. */}
-            <Link href="/" className="font-bold text-2xl tracking-tight text-[#274c77]">
+          {/* Left Side: Search & Hamburger */}
+          <div className="flex items-center gap-4 w-1/3">
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden">
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+            <div className="hidden md:flex items-center gap-2 text-[#274c77] hover:text-[#6096ba] cursor-pointer">
+              <Search size={20} />
+              <span>Search</span>
+            </div>
+          </div>
+
+          {/* Center: Logo */}
+          <div className="flex justify-center w-1/3">
+            <Link href="/" className="font-bold text-2xl text-[#274c77] whitespace-nowrap">
               Handcrafted Haven
             </Link>
           </div>
 
-          {/* 2. Search bar section. */}
-          {/* Hidden on mobile, visible on desktop. */}
-          <div className="flex-1 max-w-2xl px-8 hidden md:flex">
-            <div className="w-full relative">
-              {/* The search input field. */}
-              <input
-                type="text"
-                placeholder="Search for anything..."
-                className="w-full bg-[#e7ecef] border border-[#8b8c89] rounded-full py-2 pl-5 pr-10 focus:outline-none focus:ring-2 focus:ring-[#6096ba]"
-              />
-              {/* Search icon button. */}
-              <button aria-label="Search" className="absolute right-0 top-0 mt-2 mr-4 text-[#274c77]">
-                <SearchIcon />
-              </button>
-            </div>
-          </div>
-
-          {/* 3. Icons section. */}
-          <div className="flex items-center space-x-6">
-            
-            {/* User profile button. */}
-            <button aria-label="User Profile" className="text-[#274c77] hover:text-[#a3cef1] transition-colors">
-              <UserIcon />
-            </button>
-            
-            {/* Shopping cart button. */}
-            <button aria-label="Shopping Cart" className="text-[#274c77] hover:text-[#a3cef1] transition-colors relative">
-              <CartIcon />
-              {/* Cart notification badge. */}
-              <span className="absolute -top-2 -right-2 bg-[#6096ba] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                2
-              </span>
-            </button>
+          {/* Right Side: User & Cart */}
+          <div className="hidden md:flex items-center justify-end gap-6 w-1/3">
+            <Link href="/login" className="flex items-center gap-2 text-[#274c77] hover:text-[#6096ba]">
+              <User size={24} />
+              <span>Sign In</span>
+            </Link>
+            <Link href="/cart" className="flex items-center gap-2 text-[#274c77] hover:text-[#6096ba]">
+              <ShoppingCart size={24} />
+              <span>Cart</span>
+            </Link>
           </div>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-100 flex flex-col gap-4 text-center">
+            <Link href="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link href="/search" onClick={() => setIsMenuOpen(false)}>Search</Link>
+            <Link href="/login" onClick={() => setIsMenuOpen(false)}>Sign In</Link>
+            <Link href="/cart" onClick={() => setIsMenuOpen(false)}>Cart</Link>
+          </div>
+        )}
       </div>
-
-      {/* 4. Category navigation row. */}
-      <nav className="border-t border-[#e7ecef] bg-white">
-        {/* Horizontally scrollable list. */}
-        <ul className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-8 overflow-x-auto py-3 text-sm font-medium text-[#8b8c89] whitespace-nowrap">
-          
-          {/* Looping through my categories. */}
-          {CATEGORIES.map((category) => (
-            <li key={category} className="cursor-pointer hover:text-[#274c77] transition-colors">
-              {/* Formatting category links. */}
-              <Link href={`/category/${category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`}>
-                {category}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
     </header>
-  );
-}
-
-// SVG icons for portability.
-function SearchIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-    </svg>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-    </svg>
-  );
-}
-
-function CartIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-    </svg>
   );
 }

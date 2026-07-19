@@ -1,6 +1,6 @@
-/* Update to use Roboto */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import "tailwindcss";
 
+/* Minimal clean CSS */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -8,14 +8,11 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #ffffff; /* White background for clean look */
+  background-color: #ffffff;
   color: #222222;
   line-height: 1.5;
 }
 
-/* Applying your color scheme to headers */
 h1, h2, h3 {
-  font-family: 'Roboto', sans-serif;
-  color: #274c77; /* Using Dusk Blue for headings */
+  color: #274c77;
 }

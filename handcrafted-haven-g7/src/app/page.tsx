@@ -1,43 +1,53 @@
 // src/app/page.tsx
-import { query } from "@/lib/db";
 import Link from "next/link";
-import styles from "./page.module.css"; // Importing the CSS module
+import styles from "./page.module.css";
 
 export default async function Home() {
-  // Initialize an empty array for products
-  let products = [];
-
-  try {
-    // Attempt to fetch data from the database
-    const { rows } = await query(`
-      SELECT p.id, p.title, p.price, u.name as artisan
-      FROM products p
-      JOIN users u ON p.seller_id = u.id
-      ORDER BY p.created_at DESC
-      LIMIT 8;
-    `);
-    products = rows;
-  } catch (error) {
-    // Fallback data if the database is not configured
-    console.error("Database connection failed, using mock data.");
-    products = [
-      { id: '1', title: 'Handcrafted Wooden Bowl', price: '45.00', artisan: 'Jane Doe' },
-      { id: '2', title: 'Silver Pendant Necklace', price: '120.00', artisan: 'John Smith' },
-    ];
-  }
+  // Mock data to fill  grid
+  const products = [
+    { id: '1', title: 'Handcrafted Wooden Bowl', price: '45.00' },
+    { id: '2', title: 'Silver Pendant Necklace', price: '120.00' },
+    { id: '3', title: 'Ceramic Coffee Mug', price: '25.00' },
+    { id: '4', title: 'Vintage Leather Journal', price: '35.00' },
+    { id: '5', title: 'Handwoven Wool Blanket', price: '85.00' },
+    { id: '6', title: 'Artisan Soap Set', price: '15.00' },
+    { id: '7', title: 'Abstract Oil Painting', price: '200.00' },
+    { id: '8', title: 'Custom Wood Sign', price: '55.00' },
+    { id: '9', title: 'Handmade Clay Vase', price: '40.00' },
+    { id: '10', title: 'Knitted Wool Scarf', price: '30.00' },
+    { id: '11', title: 'Bamboo Cutting Board', price: '20.00' },
+    { id: '12', title: 'Leather Wallet', price: '50.00' },
+    { id: '13', title: 'Hand-Painted Ceramic Plate', price: '35.00' },
+    { id: '14', title: 'Macrame Wall Hanging', price: '60.00' },
+    { id: '15', title: 'Handmade Beaded Bracelet', price: '25.00' },
+    { id: '16', title: 'Rustic Wooden Picture Frame', price: '18.00' },
+    { id: '17', title: 'Organic Cotton Tote Bag', price: '22.00' },
+    { id: '18', title: 'Hand-Carved Wooden Spoon Set', price: '28.00' },
+    { id: '19', title: 'Decorative Throw Pillow', price: '45.00' },
+    { id: '20', title: 'Handwoven Rattan Basket', price: '35.00' },
+    { id: '21', title: 'Artisan Candle', price: '15.00' },
+    { id: '22', title: 'Handmade Soap Dish', price: '12.00' },
+    { id: '23', title: 'Wool Knit Hat', price: '25.00' },
+    { id: '24', title: 'Handcrafted Wooden Coasters', price: '20.00' },
+    { id: '25', title: 'Ceramic Plant Pot', price: '30.00' },
+    { id: '26', title: 'Handmade Dreamcatcher', price: '50.00' },
+    { id: '27', title: 'Hand-Stitched Leather Belt', price: '45.00' },
+    { id: '28', title: 'Handwoven Table Runner', price: '40.00' },
+    { id: '29', title: 'Handmade Wooden Toy', price: '35.00' },
+    { id: '30', title: 'Artisan Glass Vase', price: '75.00' },
+  ];
 
   return (
     <div className={styles.homeContainer}>
-      
       {/* Hero Section */}
       <section className={styles.heroSection}>
-        <h1>Incredible things, made by incredible people.</h1>
+        <h1 className="text-4xl font-bold mb-4">Incredible things, made by incredible people.</h1>
         <button className={styles.heroButton}>Shop Handcrafted</button>
       </section>
 
       {/* Main Product Display */}
       <section>
-        <h2>Popular right now</h2>
+        <h2 className="text-2xl font-semibold mb-6">Popular right now</h2>
         <div className={styles.productGrid}>
           {products.map((product) => (
             <Link 
@@ -45,16 +55,18 @@ export default async function Home() {
               key={product.id} 
               className={styles.productCard}
             >
-              <div className={styles.productImage}>
-                {/* Product image would go here */}
-              </div>
+              {/* Added a placeholder image container */}
+              <div className={styles.productImage}><img 
+                  src={`https://picsum.photos/seed/${product.id}/400/400`} 
+                  alt={product.title}
+                  className="w-full h-full object-cover rounded-lg"
+                /></div>
               <h3 className={styles.productTitle}>{product.title}</h3>
               <p className={styles.productPrice}>${product.price}</p>
             </Link>
           ))}
         </div>
       </section>
-
     </div>
   );
 }
