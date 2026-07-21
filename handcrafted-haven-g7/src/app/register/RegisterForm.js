@@ -4,7 +4,6 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import styles from "../login/AuthForm.module.css";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -55,62 +54,88 @@ export default function RegisterForm() {
   }
 
   return (
-    <div className={styles.container}>
-      <h1>Create an account</h1>
-      <form onSubmit={handleSubmit} noValidate>
-        <div className={styles.field}>
-          <label htmlFor="name">Name</label>
-          <input id="name" name="name" type="text" required autoComplete="name" />
-        </div>
+    <div className="flex items-center justify-center min-h-[calc(100vh-5rem)] px-4 py-12">
+      <div className="w-full max-w-xl bg-white p-8 sm:p-12 rounded-xl shadow-sm border border-gray-100">
+        <h1 className="text-3xl font-bold text-[#274c77] mb-8 text-center">
+          Create an account
+        </h1>
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="mb-5">
+            <label htmlFor="name" className="block font-medium mb-1.5">
+              Name
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              autoComplete="name"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#274c77]"
+            />
+          </div>
 
-        <div className={styles.field}>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-          />
-        </div>
+          <div className="mb-5">
+            <label htmlFor="email" className="block font-medium mb-1.5">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#274c77]"
+            />
+          </div>
 
-        <div className={styles.field}>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            minLength={8}
-            autoComplete="new-password"
-          />
-        </div>
+          <div className="mb-5">
+            <label htmlFor="password" className="block font-medium mb-1.5">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              minLength={8}
+              autoComplete="new-password"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#274c77]"
+            />
+          </div>
 
-        <fieldset className={styles.fieldset}>
-          <legend>I am a...</legend>
-          <label className={styles.radioLabel}>
-            <input type="radio" name="role" value="buyer" defaultChecked />
-            Buyer
-          </label>
-          <label className={styles.radioLabel}>
-            <input type="radio" name="role" value="seller" />
-            Seller
-          </label>
-        </fieldset>
+          <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
+            <legend className="font-medium px-1">I am a...</legend>
+            <label className="flex items-center gap-2 my-2">
+              <input type="radio" name="role" value="buyer" defaultChecked />
+              Buyer
+            </label>
+            <label className="flex items-center gap-2 my-2">
+              <input type="radio" name="role" value="seller" />
+              Seller
+            </label>
+          </fieldset>
 
-        {error && (
-          <p role="alert" className={styles.error}>
-            {error}
-          </p>
-        )}
+          {error && (
+            <p role="alert" className="text-[#9b1c1c] mb-4">
+              {error}
+            </p>
+          )}
 
-        <button type="submit" disabled={submitting} className={styles.submit}>
-          {submitting ? "Creating account…" : "Create account"}
-        </button>
-      </form>
-      <p>
-        Already have an account? <Link href="/login">Sign in</Link>
-      </p>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full py-3 bg-[#274c77] text-white font-bold rounded-md hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {submitting ? "Creating account…" : "Create account"}
+          </button>
+        </form>
+        <p className="text-center mt-6 text-sm text-gray-600">
+          Already have an account?{" "}
+          <Link href="/login" className="text-[#274c77] font-medium hover:underline">
+            Sign in
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
