@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# seller runtime data (generated locally during testing)
+/data/*.json
+/public/uploads/*
+!/public/uploads/.gitkeep
