@@ -1,6 +1,26 @@
 @import "tailwindcss";
 
-/* Minimal clean CSS */
+@theme {
+  --color-platinum: #e7ecef;
+  --color-dusk-blue: #274c77;
+  --color-steel-blue: #6096ba;
+  --color-icy-blue: #a3cef1;
+  --color-grey-olive: #8b8c89;
+  --color-body: #222222;
+  --color-footer-bg: #f8f9fa;
+  --breakpoint-md: 768px;
+}
+
+:root {
+  --platinum: #e7ecef;
+  --dusk-blue: #274c77;
+  --steel-blue: #6096ba;
+  --icy-blue: #a3cef1;
+  --grey-olive: #8b8c89;
+  --body-text: #222222;
+  --footer-bg: #f8f9fa;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,10 +29,31 @@
 
 body {
   background-color: #ffffff;
-  color: #222222;
+  color: var(--body-text);
   line-height: 1.5;
+  font-family: var(--font-roboto), system-ui, sans-serif;
 }
 
-h1, h2, h3 {
-  color: #274c77;
+h1,
+h2,
+h3 {
+  color: var(--dusk-blue);
+}
+
+.page-container {
+  width: 100%;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 }
