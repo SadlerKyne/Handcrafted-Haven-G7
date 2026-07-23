@@ -1,26 +1,39 @@
 @import "tailwindcss";
 
-@theme {
+:root {
+  /* Brand palette (see project spec) */
   --color-platinum: #e7ecef;
   --color-dusk-blue: #274c77;
   --color-steel-blue: #6096ba;
   --color-icy-blue: #a3cef1;
   --color-grey-olive: #8b8c89;
-  --color-body: #222222;
-  --color-footer-bg: #f8f9fa;
-  --breakpoint-md: 768px;
+
+  /* Semantic tokens derived from the palette above.
+     Some raw palette colors fail WCAG AA as text against Platinum/white
+     (steel-blue ~2.7:1, icy-blue ~1.4:1, grey-olive ~2.8:1 — all below the
+     4.5:1 minimum for normal text). These derived tokens keep the same
+     hues but stay AA-safe wherever they carry text or need to read as a
+     UI boundary. See README "Design decisions" for the full contrast
+     rationale. */
+  --color-background: var(--color-platinum);
+  --color-surface: #ffffff;
+  --color-text-primary: #1f2933;
+  --color-text-secondary: #5c5d5a;
+  /* darkened grey-olive, ~5.3:1 on platinum */
+  --color-text-on-brand: #ffffff;
+  --color-border: #c9cac6;
+  /* lightened grey-olive, for dividers/inputs */
+  --color-link: var(--color-dusk-blue);
+  --color-focus-ring: var(--color-dusk-blue);
+  --color-error: #9b1c1c;
+  /* ~6.9:1 on platinum, ~7.7:1 on white — passes AA */
+
+  --font-family-base: var(--font-roboto), Arial, Helvetica, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
 }
 
-:root {
-  --platinum: #e7ecef;
-  --dusk-blue: #274c77;
-  --steel-blue: #6096ba;
-  --icy-blue: #a3cef1;
-  --grey-olive: #8b8c89;
-  --body-text: #222222;
-  --footer-bg: #f8f9fa;
-}
-
+/* Minimal clean CSS */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -28,8 +41,8 @@
 }
 
 body {
-  background-color: #ffffff;
-  color: var(--body-text);
+  background-color: var(--color-background);
+  color: #222222;
   line-height: 1.5;
   font-family: var(--font-roboto), system-ui, sans-serif;
 }
@@ -37,23 +50,5 @@ body {
 h1,
 h2,
 h3 {
-  color: var(--dusk-blue);
-}
-
-.page-container {
-  width: 100%;
-  max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-}
-
-@media (min-width: 768px) {
-  .page-container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
+  color: #274c77;
 }
