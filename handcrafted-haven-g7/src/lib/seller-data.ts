@@ -148,3 +148,38 @@ export async function deleteSellerProduct(id: string): Promise<boolean> {
   await writeJsonFile(PRODUCTS_FILE, filtered);
   return true;
 }
+
+export type ProductFilter = {
+  q?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+};
+
+export async function searchProducts(filter: ProductFilter): Promise<SellerProduct[]> {
+  let products = await getSellerProducts();
+
+  if (filter.q) {
+    const query = filter.q.toLowerCase().trim();
+    products = products.filter(
+      (p) =>
+        p.title.toLowerCase().includes(query) ||
+        p.description.toLowerCase().includes(query)
+    );
+  }
+
+  if (filter.category) {
+    const cat = filter.category.toLowerCase().trim();
+    products = products.filter((p) => p.category.toLowerCase() === cat);
+  }
+
+  if (filter.minPrice !== undefined && !isNaN(filter.minPrice)) {
+    products = products.filter((p) => p.price >= filter.minPrice!);
+  }
+
+  if (filter.maxPrice !== undefined && !isNaN(filter.maxPrice)) {
+    products = products.filter((p) => p.price <= filter.maxPrice!);
+  }
+
+  return products;
+}
