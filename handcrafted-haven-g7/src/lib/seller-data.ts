@@ -20,6 +20,7 @@ export type SellerProduct = {
   description: string;
   price: number;
   category: string;
+  images: string[];
   imageUrl: string | null;
   stockQuantity: number;
   createdAt: string;
@@ -83,7 +84,11 @@ export async function updateSellerProfile(
 }
 
 export async function getSellerProducts(): Promise<SellerProduct[]> {
-  return readJsonFile<SellerProduct[]>(PRODUCTS_FILE, []);
+  const products = await readJsonFile<SellerProduct[]>(PRODUCTS_FILE, []);
+  return products.map((product) => ({
+    ...product,
+    images: product.images || (product.imageUrl ? [product.imageUrl] : []),
+  }));
 }
 
 export async function getSellerProductById(id: string): Promise<SellerProduct | null> {
@@ -102,6 +107,7 @@ export async function createSellerProduct(
     id: `seller-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     sellerId: profile.id,
     ...input,
+    imageUrl: input.imageUrl || input.images[0] || null,
     createdAt: now,
     updatedAt: now,
   };
@@ -119,9 +125,15 @@ export async function updateSellerProduct(
   const index = products.findIndex((product) => product.id === id);
   if (index === -1) return null;
 
+  const currentProduct = products[index];
+  const currentImages = currentProduct.images || (currentProduct.imageUrl ? [currentProduct.imageUrl] : []);
+  const nextImages = updates.images !== undefined ? updates.images : currentImages;
+
   const updated: SellerProduct = {
-    ...products[index],
+    ...currentProduct,
     ...updates,
+    images: nextImages,
+    imageUrl: updates.imageUrl !== undefined ? updates.imageUrl : (nextImages[0] || null),
     updatedAt: new Date().toISOString(),
   };
   products[index] = updated;

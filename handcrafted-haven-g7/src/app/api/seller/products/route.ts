@@ -17,11 +17,18 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, description, price, category, imageUrl, stockQuantity } = body;
+    const { title, description, price, category, images, stockQuantity } = body;
 
     if (!title?.trim() || !description?.trim() || !category?.trim()) {
       return NextResponse.json(
         { error: "Title, description, and category are required." },
+        { status: 400 }
+      );
+    }
+
+    if (!Array.isArray(images) || images.length === 0 || images.some((img) => !img || typeof img !== "string" || !img.trim())) {
+      return NextResponse.json(
+        { error: "At least one product image is required." },
         { status: 400 }
       );
     }
@@ -41,7 +48,8 @@ export async function POST(request: NextRequest) {
       description: String(description).trim(),
       price: parsedPrice,
       category: String(category).trim(),
-      imageUrl: imageUrl || null,
+      images: images.map((img) => String(img).trim()),
+      imageUrl: images[0] || null,
       stockQuantity: parsedStock,
     });
 

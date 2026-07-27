@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import ImageUpload from "@/components/ImageUpload";
+import MultiImageUpload from "@/components/MultiImageUpload";
 import type { SellerProduct } from "@/lib/seller-data";
 
 const CATEGORIES = [
@@ -25,7 +25,7 @@ const emptyForm = {
   description: "",
   price: "",
   category: CATEGORIES[0],
-  imageUrl: null as string | null,
+  images: [] as string[],
   stockQuantity: "1",
 };
 
@@ -37,7 +37,7 @@ export default function ProductForm({ initial, onSuccess, onCancel }: ProductFor
           description: initial.description,
           price: String(initial.price),
           category: initial.category,
-          imageUrl: initial.imageUrl,
+          images: initial.images || (initial.imageUrl ? [initial.imageUrl] : []),
           stockQuantity: String(initial.stockQuantity),
         }
       : emptyForm
@@ -49,6 +49,34 @@ export default function ProductForm({ initial, onSuccess, onCancel }: ProductFor
     event.preventDefault();
     setSaving(true);
     setError(null);
+
+    if (!form.title.trim()) {
+      setError("Product title is required.");
+      setSaving(false);
+      return;
+    }
+    if (!form.description.trim()) {
+      setError("Product description is required.");
+      setSaving(false);
+      return;
+    }
+    const parsedPrice = Number(form.price);
+    if (Number.isNaN(parsedPrice) || parsedPrice < 0) {
+      setError("Price must be a valid non-negative number.");
+      setSaving(false);
+      return;
+    }
+    const parsedStock = Number(form.stockQuantity);
+    if (!Number.isInteger(parsedStock) || parsedStock < 0) {
+      setError("Stock quantity must be a non-negative integer.");
+      setSaving(false);
+      return;
+    }
+    if (form.images.length === 0) {
+      setError("At least one product image is required.");
+      setSaving(false);
+      return;
+    }
 
     try {
       const url = initial
@@ -64,7 +92,7 @@ export default function ProductForm({ initial, onSuccess, onCancel }: ProductFor
           description: form.description,
           price: form.price,
           category: form.category,
-          imageUrl: form.imageUrl,
+          images: form.images,
           stockQuantity: form.stockQuantity,
         }),
       });
@@ -165,10 +193,10 @@ export default function ProductForm({ initial, onSuccess, onCancel }: ProductFor
         </div>
       </div>
 
-      <ImageUpload
-        label="Product Image"
-        value={form.imageUrl}
-        onChange={(url) => setForm({ ...form, imageUrl: url })}
+      <MultiImageUpload
+        label="Product Images"
+        values={form.images}
+        onChange={(urls) => setForm({ ...form, images: urls })}
       />
 
       {error && (
