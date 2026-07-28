@@ -8,6 +8,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 // Importing my custom Footer component.
 import Footer from "@/components/Footer";
+// Importing the session provider wrapper so client components can call useSession/signIn.
+import Providers from "@/components/Providers";
 
 // Configuring the Roboto font weights and subsets.
 const roboto = Roboto({
@@ -33,14 +35,16 @@ export default function RootLayout({
     <html lang="en" className={roboto.variable}>
       {/* Setting up a flexbox column layout to push the footer to the bottom. */}
       <body className="flex flex-col min-h-screen">
-        {/* Rendering the global navigation bar at the top. */}
-        <Navbar />
-        {/* Main content area that expands to fill available space. */}
-        <main className="flex-grow">
-          {children}
-        </main>
-        {/* Rendering the global footer at the bottom. */}
-        <Footer />
+        <Providers>
+          {/* Rendering the global navigation bar at the top. */}
+          <Navbar />
+          {/* Main content area that expands to fill available space. */}
+          <main className="flex-grow">
+            {children}
+          </main>
+          {/* Rendering the global footer at the bottom. */}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
