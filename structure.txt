@@ -67,6 +67,7 @@
 │   │   │           └── page.tsx
 │   │   ├── components
 │   │   │   ├── Footer.tsx
+<<<<<<< Updated upstream
 │   │   │   ├── ImageUpload.tsx
 │   │   │   ├── MultiImageUpload.tsx
 │   │   │   ├── Navbar.tsx
@@ -85,8 +86,17 @@
 │   │   └── models
 │   │       ├── Product.js
 │   │       └── User.js
+=======
+│   │   │   └── Navbar.tsx
+│   │   └── lib
+│   │       └── db.ts
+>>>>>>> Stashed changes
 │   ├── structure.txt
 │   └── tsconfig.json
 └── structure.txt
 
+<<<<<<< Updated upstream
 33 directories, 57 files
+=======
+18 directories, 34 files
+>>>>>>> Stashed changes
