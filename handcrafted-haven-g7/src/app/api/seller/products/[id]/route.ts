@@ -25,13 +25,34 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const body = await request.json();
-    const { title, description, price, category, imageUrl, stockQuantity } = body;
+    const { title, description, price, category, images, stockQuantity } = body;
 
     const updates: Record<string, unknown> = {};
-    if (title !== undefined) updates.title = String(title).trim();
-    if (description !== undefined) updates.description = String(description).trim();
-    if (category !== undefined) updates.category = String(category).trim();
-    if (imageUrl !== undefined) updates.imageUrl = imageUrl || null;
+    if (title !== undefined) {
+      if (typeof title !== "string" || !title.trim()) {
+        return NextResponse.json({ error: "Title is required and cannot be empty." }, { status: 400 });
+      }
+      updates.title = title.trim();
+    }
+    if (description !== undefined) {
+      if (typeof description !== "string" || !description.trim()) {
+        return NextResponse.json({ error: "Description is required and cannot be empty." }, { status: 400 });
+      }
+      updates.description = description.trim();
+    }
+    if (category !== undefined) {
+      if (typeof category !== "string" || !category.trim()) {
+        return NextResponse.json({ error: "Category is required and cannot be empty." }, { status: 400 });
+      }
+      updates.category = category.trim();
+    }
+    if (images !== undefined) {
+      if (!Array.isArray(images) || images.length === 0 || images.some((img) => !img || typeof img !== "string" || !img.trim())) {
+        return NextResponse.json({ error: "At least one product image is required." }, { status: 400 });
+      }
+      updates.images = images.map((img) => img.trim());
+      updates.imageUrl = images[0] || null;
+    }
 
     if (price !== undefined) {
       const parsedPrice = Number(price);

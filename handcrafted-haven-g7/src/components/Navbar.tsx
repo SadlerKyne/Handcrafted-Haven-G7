@@ -42,7 +42,7 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center justify-end gap-6 md:w-1/3">
             <Link href="/seller/profile" className={`flex items-center gap-2 ${navLinkClass}`}>
-              <LayoutDashboard size={22} />
+              {/* < LayoutDashboardsize={22} /> */}
               <span>Seller</span>
             </Link>
             <Link href="/login" className={`flex items-center gap-2 ${navLinkClass}`}>
