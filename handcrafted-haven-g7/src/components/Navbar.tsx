@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { User, UserPlus, ShoppingCart, Search, Menu, X } from "lucide-react";
+import { User, UserPlus, ShoppingCart, Search, Menu, X, LayoutDashboard } from "lucide-react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,11 +49,11 @@ export default function Navbar() {
               <User size={24} />
               <span>Sign In</span>
             </Link>
-            <Link href="/register" className="flex items-center gap-2 text-[#274c77] hover:text-[#6096ba]">
+            <Link href="/register" className={`flex items-center gap-2 ${navLinkClass}`}>
               <UserPlus size={24} />
               <span>Register</span>
             </Link>
-            <Link href="/cart" className="flex items-center gap-2 text-[#274c77] hover:text-[#6096ba]">
+            <Link href="/cart" className={`flex items-center gap-2 ${navLinkClass}`}>
               <ShoppingCart size={24} />
               <span>Cart</span>
             </Link>
