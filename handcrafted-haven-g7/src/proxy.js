@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { auth } from "@/auth.js";
 
 // Wrapping the middleware in `auth()` gives us `req.auth` (the session, or
 // null) on every matched request without an extra database round trip.
