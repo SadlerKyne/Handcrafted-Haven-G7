@@ -3,7 +3,7 @@ import {
   deleteSellerProduct,
   getSellerProductById,
   updateSellerProduct,
-} from "@/lib/seller-data";
+} from "../../../../../lib/seller-data";
 
 type RouteContext = { params: Promise<{ id: string }> };
 

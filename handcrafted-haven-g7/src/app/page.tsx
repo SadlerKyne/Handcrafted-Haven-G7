@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { getSellerProducts, getSellerProfile } from "@/lib/seller-data";
+import { getSellerProducts, getSellerProfile } from "../lib/seller-data";
 
 export default async function Home() {
   const products = [

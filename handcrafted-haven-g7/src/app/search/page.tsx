@@ -1,6 +1,6 @@
-import PageContainer from "@/components/PageContainer";
-import { searchProducts } from "@/lib/seller-data";
-import SearchClient from "@/components/SearchClient";
+import PageContainer from "../../components/PageContainer";
+import { searchProducts } from "../../lib/seller-data";
+import SearchClient from "../../components/SearchClient";
 
 const CATEGORIES = [
   "Home & Living",

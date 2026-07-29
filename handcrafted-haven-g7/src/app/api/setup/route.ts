@@ -1,7 +1,7 @@
 // Importing the Next.js response helper.
 import { NextResponse } from "next/server";
 // Importing my custom database query helper.
-import { query } from "@/lib/db"; 
+import { query } from "../../../lib/db";
 
 // Defining the GET endpoint for my setup route.
 export async function GET() {

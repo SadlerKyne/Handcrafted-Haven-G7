@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSellerProfile, updateSellerProfile } from "@/lib/seller-data";
+import { getSellerProfile, updateSellerProfile } from "../../../../lib/seller-data";
 
 export async function GET() {
   try {
