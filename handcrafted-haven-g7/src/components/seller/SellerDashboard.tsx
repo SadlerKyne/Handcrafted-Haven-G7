@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Edit2, Loader2, Package, Trash2 } from "lucide-react";
-import ProductForm from "@/components/seller/ProductForm";
-import type { SellerProduct, SellerProfile } from "@/lib/seller-data";
+import ProductForm from "../../components/seller/ProductForm";
+import type { SellerProduct, SellerProfile } from "../../lib/seller-data";
 
 export default function SellerDashboard() {
   const [products, setProducts] = useState<SellerProduct[]>([]);

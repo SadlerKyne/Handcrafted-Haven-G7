@@ -5,11 +5,11 @@ import { Roboto } from "next/font/google";
 // Importing my global stylesheet.
 import "./globals.css";
 // Importing my custom Navbar component.
-import Navbar from "@/components/Navbar";
+import Navbar from "../components/Navbar";
 // Importing my custom Footer component.
-import Footer from "@/components/Footer";
+import Footer from "../components/Footer";
 // Importing the session provider wrapper so client components can call useSession/signIn.
-import Providers from "@/components/Providers";
+import Providers from "../components/Providers";
 
 // Configuring the Roboto font weights and subsets.
 const roboto = Roboto({

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   createSellerProduct,
   getSellerProducts,
-} from "@/lib/seller-data";
+} from "../../../../lib/seller-data";
 
 export async function GET() {
   try {

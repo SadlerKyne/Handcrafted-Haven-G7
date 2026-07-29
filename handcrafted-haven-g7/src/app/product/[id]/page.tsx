@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import {
   getSellerProductById,
   getSellerProfile,
-} from "@/lib/seller-data";
+} from "../../../lib/seller-data";
 
 const getMockProduct = (id: string) => ({
   id,
@@ -30,15 +30,15 @@ export default async function ProductPage({
 
   const product = sellerProduct
     ? {
-        id: sellerProduct.id,
-        title: sellerProduct.title,
-        category: sellerProduct.category,
-        artisan: sellerProfile?.shopName || sellerProfile?.name || "Artisan",
-        price: sellerProduct.price.toFixed(2),
-        description: sellerProduct.description,
-        stock_quantity: sellerProduct.stockQuantity,
-        image_url: sellerProduct.imageUrl,
-      }
+      id: sellerProduct.id,
+      title: sellerProduct.title,
+      category: sellerProduct.category,
+      artisan: sellerProfile?.shopName || sellerProfile?.name || "Artisan",
+      price: sellerProduct.price.toFixed(2),
+      description: sellerProduct.description,
+      stock_quantity: sellerProduct.stockQuantity,
+      image_url: sellerProduct.imageUrl,
+    }
     : getMockProduct(productId);
 
   if (!sellerProduct && !productId.match(/^\d+$/)) {
