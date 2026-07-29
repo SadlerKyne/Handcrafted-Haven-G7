@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import dbConnect from "@/lib/dbConnect";
-import User from "@/models/User";
+import dbConnect from "../../../lib/dbConnect";
+import User from "../../../models/User";
 
 export async function POST(request) {
   const { name, email, password, role } = await request.json();

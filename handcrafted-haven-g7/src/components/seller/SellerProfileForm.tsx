@@ -4,8 +4,8 @@ import { FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, Loader2 } from "lucide-react";
-import ImageUpload from "@/components/ImageUpload";
-import type { SellerProfile } from "@/lib/seller-data";
+import ImageUpload from "../../components/ImageUpload";
+import type { SellerProfile } from "../../lib/seller-data";
 
 const emptyProfile: SellerProfile = {
   id: "",

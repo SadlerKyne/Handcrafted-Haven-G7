@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, SlidersHorizontal, Trash2, Inbox } from "lucide-react";
-import type { SellerProduct } from "@/lib/seller-data";
+import type { SellerProduct } from "../lib/seller-data";
 
 type SearchClientProps = {
   initialProducts: SellerProduct[];

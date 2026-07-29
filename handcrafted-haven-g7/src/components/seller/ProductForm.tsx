@@ -1,8 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import MultiImageUpload from "@/components/MultiImageUpload";
-import type { SellerProduct } from "@/lib/seller-data";
+import MultiImageUpload from "../../components/MultiImageUpload";
+import type { SellerProduct } from "../../lib/seller-data";
 
 const CATEGORIES = [
   "Home & Living",
@@ -33,13 +33,13 @@ export default function ProductForm({ initial, onSuccess, onCancel }: ProductFor
   const [form, setForm] = useState(
     initial
       ? {
-          title: initial.title,
-          description: initial.description,
-          price: String(initial.price),
-          category: initial.category,
-          images: initial.images || (initial.imageUrl ? [initial.imageUrl] : []),
-          stockQuantity: String(initial.stockQuantity),
-        }
+        title: initial.title,
+        description: initial.description,
+        price: String(initial.price),
+        category: initial.category,
+        images: initial.images || (initial.imageUrl ? [initial.imageUrl] : []),
+        stockQuantity: String(initial.stockQuantity),
+      }
       : emptyForm
   );
   const [saving, setSaving] = useState(false);
