@@ -198,7 +198,7 @@ export default function SellerProfileForm() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col md:flex-row gap-3">
           <button
             type="submit"
             disabled={saving}

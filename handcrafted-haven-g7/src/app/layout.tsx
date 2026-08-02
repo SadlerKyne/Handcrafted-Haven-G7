@@ -24,6 +24,11 @@ export const metadata: Metadata = {
   description: "A premier marketplace connecting artisans with buyers for unique handcrafted items.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 // Main layout wrapper for the entire application.
 export default function RootLayout({
   children,

@@ -62,7 +62,7 @@ export default function MultiImageUpload({
   return (
     <div>
       <label className="block text-sm font-medium text-[#274c77] mb-2">{label}</label>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {values.map((url, index) => (
           <div key={url + index} className="relative aspect-square border border-gray-200 rounded-lg overflow-hidden bg-[#e7ecef]">
             <Image

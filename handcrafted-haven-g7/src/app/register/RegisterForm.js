@@ -55,7 +55,7 @@ export default function RegisterForm() {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-5rem)] px-4 py-12">
-      <div className="w-full max-w-xl bg-white p-8 sm:p-12 rounded-xl shadow-sm border border-gray-100">
+      <div className="w-full max-w-xl bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-100">
         <h1 className="text-3xl font-bold text-[#274c77] mb-8 text-center">
           Create an account
         </h1>

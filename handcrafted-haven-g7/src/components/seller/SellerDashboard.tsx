@@ -71,7 +71,7 @@ export default function SellerDashboard() {
             Manage inventory for {profile?.shopName || "your shop"}
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col md:flex-row gap-3">
           <Link
             href="/seller/profile"
             className="text-center border border-[#6096ba] text-[#6096ba] hover:bg-[#e7ecef] px-5 py-2.5 rounded-full font-semibold transition-colors"

@@ -64,8 +64,8 @@ export default function SearchClient({
         <p className="text-[#8b8c89] mt-1">Discover unique handcrafted products</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <aside className="lg:col-span-1 bg-white p-5 rounded-xl border border-gray-200 shadow-sm h-fit space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <aside className="md:col-span-1 bg-white p-5 rounded-xl border border-gray-200 shadow-sm h-fit space-y-6">
           <div className="flex items-center justify-between border-b border-gray-100 pb-3">
             <div className="flex items-center gap-2 font-bold text-[#274c77]">
               <SlidersHorizontal size={18} />
@@ -166,7 +166,7 @@ export default function SearchClient({
           </div>
         </aside>
 
-        <main className="lg:col-span-3">
+        <main className="md:col-span-3">
           {initialProducts.length === 0 ? (
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center flex flex-col items-center justify-center">
               <Inbox size={48} className="text-gray-300 mb-4" />
@@ -181,7 +181,7 @@ export default function SearchClient({
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {initialProducts.map((product) => (
                 <Link
                   href={`/product/${product.id}`}
