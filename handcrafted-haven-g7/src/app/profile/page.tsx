@@ -9,7 +9,11 @@ export default function ProfilePage() {
         <div className="col-span-1 border border-gray-200 rounded-lg p-6">
           <h2 className="font-bold text-lg mb-2">Navigation</h2>
           <ul className="space-y-2 text-[#8b8c89]">
-            <li>Purchases & Reviews</li>
+            <li>
+              <Link href="/orders" className="text-[#6096ba] hover:text-[#274c77]">
+                Purchases & Reviews
+              </Link>
+            </li>
             <li>Messages</li>
             <li>Account Settings</li>
             <li>

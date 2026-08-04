@@ -15,6 +15,8 @@ const emptyProfile: SellerProfile = {
   bio: "",
   avatarUrl: null,
   location: "",
+  sellerVerified: false,
+  role: "seller",
   createdAt: "",
   updatedAt: "",
 };
@@ -86,7 +88,14 @@ export default function SellerProfileForm() {
                 </div>
               )}
             </div>
-            <h2 className="text-xl font-bold text-[#274c77]">{profile.shopName}</h2>
+            <h2 className="text-xl font-bold text-[#274c77] flex items-center justify-center gap-1.5">
+              {profile.shopName}
+              {profile.sellerVerified && (
+                <span className="text-xs text-white bg-[#274c77] rounded-full px-2 py-0.5" title="Verified seller">
+                  &#10003; Verified
+                </span>
+              )}
+            </h2>
             <p className="text-sm text-[#8b8c89] mt-1">{profile.location}</p>
           </div>
           <nav className="space-y-2 text-sm">
@@ -138,15 +147,15 @@ export default function SellerProfileForm() {
             </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-[#274c77] mb-1">
-                Contact Email
+                Login Email
               </label>
               <input
                 id="email"
                 type="email"
                 value={profile.email}
-                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                className="w-full border border-gray-200 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6096ba]"
-                required
+                readOnly
+                disabled
+                className="w-full border border-gray-200 rounded-md px-3 py-2 bg-gray-50 text-[#8b8c89] cursor-not-allowed"
               />
             </div>
             <div>

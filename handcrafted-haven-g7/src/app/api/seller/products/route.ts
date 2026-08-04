@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "../../../../auth";
 import {
   createSellerProduct,
   getSellerProducts,
@@ -6,7 +7,11 @@ import {
 
 export async function GET() {
   try {
-    const products = await getSellerProducts();
+    const session = await auth();
+    if (!session?.user || session.user.role !== "seller") {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    }
+    const products = await getSellerProducts(session.user.id);
     return NextResponse.json(products);
   } catch (error) {
     console.error("Failed to fetch products:", error);
@@ -16,6 +21,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session?.user || session.user.role !== "seller") {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    }
+
     const body = await request.json();
     const { title, description, price, category, images, stockQuantity } = body;
 
@@ -43,13 +53,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Stock must be a whole number." }, { status: 400 });
     }
 
-    const product = await createSellerProduct({
+    const product = await createSellerProduct(session.user.id, {
       title: String(title).trim(),
       description: String(description).trim(),
       price: parsedPrice,
       category: String(category).trim(),
       images: images.map((img) => String(img).trim()),
-      imageUrl: images[0] || null,
       stockQuantity: parsedStock,
     });
 

@@ -66,7 +66,18 @@ export default function SellerDashboard() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-[#274c77]">Seller Dashboard</h1>
+          <h1 className="text-3xl font-bold text-[#274c77] flex items-center gap-2">
+            Seller Dashboard
+            {profile?.sellerVerified ? (
+              <span className="text-xs text-white bg-[#274c77] rounded-full px-2 py-0.5">
+                &#10003; Verified
+              </span>
+            ) : (
+              <span className="text-xs text-[#8b8c89] bg-[#e7ecef] rounded-full px-2 py-0.5">
+                Not yet verified
+              </span>
+            )}
+          </h1>
           <p className="text-[#8b8c89] mt-1">
             Manage inventory for {profile?.shopName || "your shop"}
           </p>
