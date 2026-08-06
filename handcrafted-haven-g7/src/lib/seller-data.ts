@@ -1,5 +1,6 @@
-import fs from "fs/promises";
-import path from "path";
+import dbConnect from "./dbConnect";
+import User from "../models/User";
+import Product from "../models/Product";
 
 export type SellerProfile = {
   id: string;
@@ -9,6 +10,8 @@ export type SellerProfile = {
   bio: string;
   avatarUrl: string | null;
   location: string;
+  sellerVerified: boolean;
+  role: "buyer" | "seller";
   createdAt: string;
   updatedAt: string;
 };
@@ -27,126 +30,145 @@ export type SellerProduct = {
   updatedAt: string;
 };
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const PROFILE_FILE = path.join(DATA_DIR, "seller-profile.json");
-const PRODUCTS_FILE = path.join(DATA_DIR, "products.json");
-
-const DEFAULT_PROFILE: SellerProfile = {
-  id: "demo-seller-001",
-  name: "Jane Artisan",
-  shopName: "Jane's Handcrafted Studio",
-  email: "artisan@handcraftedhaven.com",
-  bio: "I create unique handcrafted pieces with love and attention to detail. Each item is one-of-a-kind.",
-  avatarUrl: null,
-  location: "Portland, OR",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+type UserDoc = {
+  _id: { toString(): string };
+  name: string;
+  email: string;
+  role: "buyer" | "seller";
+  shopName?: string;
+  bio?: string;
+  avatarUrl?: string | null;
+  location?: string;
+  sellerVerified?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
-async function ensureDataDir() {
-  await fs.mkdir(DATA_DIR, { recursive: true });
+type ProductDoc = {
+  _id: { toString(): string };
+  sellerId: { toString(): string };
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  images: string[];
+  imageUrl?: string | null;
+  stockQuantity: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+function toSellerProfile(user: UserDoc): SellerProfile {
+  return {
+    id: user._id.toString(),
+    name: user.name,
+    shopName: user.shopName || "",
+    email: user.email,
+    bio: user.bio || "",
+    avatarUrl: user.avatarUrl ?? null,
+    location: user.location || "",
+    sellerVerified: Boolean(user.sellerVerified),
+    role: user.role,
+    createdAt: (user.createdAt ?? new Date()).toISOString(),
+    updatedAt: (user.updatedAt ?? new Date()).toISOString(),
+  };
 }
 
-async function readJsonFile<T>(filePath: string, fallback: T): Promise<T> {
-  try {
-    const raw = await fs.readFile(filePath, "utf-8");
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
+function toSellerProduct(product: ProductDoc): SellerProduct {
+  return {
+    id: product._id.toString(),
+    sellerId: product.sellerId.toString(),
+    title: product.title,
+    description: product.description,
+    price: product.price,
+    category: product.category,
+    images: product.images || [],
+    imageUrl: product.imageUrl ?? product.images?.[0] ?? null,
+    stockQuantity: product.stockQuantity,
+    createdAt: (product.createdAt ?? new Date()).toISOString(),
+    updatedAt: (product.updatedAt ?? new Date()).toISOString(),
+  };
 }
 
-async function writeJsonFile<T>(filePath: string, data: T) {
-  await ensureDataDir();
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
-}
-
-export async function getSellerProfile(): Promise<SellerProfile> {
-  const profile = await readJsonFile<SellerProfile | null>(PROFILE_FILE, null);
-  if (!profile) {
-    await writeJsonFile(PROFILE_FILE, DEFAULT_PROFILE);
-    return DEFAULT_PROFILE;
-  }
-  return profile;
+export async function getSellerProfile(sellerId: string): Promise<SellerProfile | null> {
+  await dbConnect();
+  const user = await User.findById(sellerId).lean<UserDoc>();
+  if (!user) return null;
+  return toSellerProfile(user);
 }
 
 export async function updateSellerProfile(
-  updates: Partial<Omit<SellerProfile, "id" | "createdAt">>
-): Promise<SellerProfile> {
-  const current = await getSellerProfile();
-  const updated: SellerProfile = {
-    ...current,
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-  await writeJsonFile(PROFILE_FILE, updated);
-  return updated;
+  sellerId: string,
+  updates: Partial<Pick<SellerProfile, "name" | "shopName" | "bio" | "avatarUrl" | "location">>
+): Promise<SellerProfile | null> {
+  await dbConnect();
+  const user = await User.findByIdAndUpdate(
+    sellerId,
+    { $set: updates },
+    { new: true }
+  ).lean<UserDoc>();
+  if (!user) return null;
+  return toSellerProfile(user);
 }
 
-export async function getSellerProducts(): Promise<SellerProduct[]> {
-  const products = await readJsonFile<SellerProduct[]>(PRODUCTS_FILE, []);
-  return products.map((product) => ({
-    ...product,
-    images: product.images || (product.imageUrl ? [product.imageUrl] : []),
-  }));
+export async function getSellerProducts(sellerId: string): Promise<SellerProduct[]> {
+  await dbConnect();
+  const products = await Product.find({ sellerId })
+    .sort({ createdAt: -1 })
+    .lean<ProductDoc[]>();
+  return products.map(toSellerProduct);
+}
+
+export async function getRecentProducts(limit = 8): Promise<SellerProduct[]> {
+  await dbConnect();
+  const products = await Product.find({})
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .lean<ProductDoc[]>();
+  return products.map(toSellerProduct);
 }
 
 export async function getSellerProductById(id: string): Promise<SellerProduct | null> {
-  const products = await getSellerProducts();
-  return products.find((product) => product.id === id) ?? null;
+  await dbConnect();
+  if (!id.match(/^[0-9a-fA-F]{24}$/)) return null;
+  const product = await Product.findById(id).lean<ProductDoc>();
+  if (!product) return null;
+  return toSellerProduct(product);
 }
 
 export async function createSellerProduct(
-  input: Omit<SellerProduct, "id" | "sellerId" | "createdAt" | "updatedAt">
+  sellerId: string,
+  input: Omit<SellerProduct, "id" | "sellerId" | "imageUrl" | "createdAt" | "updatedAt">
 ): Promise<SellerProduct> {
-  const profile = await getSellerProfile();
-  const products = await getSellerProducts();
-  const now = new Date().toISOString();
-
-  const product: SellerProduct = {
-    id: `seller-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    sellerId: profile.id,
+  await dbConnect();
+  const product = await Product.create({
     ...input,
-    imageUrl: input.imageUrl || input.images[0] || null,
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  products.unshift(product);
-  await writeJsonFile(PRODUCTS_FILE, products);
-  return product;
+    sellerId,
+  });
+  return toSellerProduct(product.toObject({ virtuals: true }) as ProductDoc);
 }
 
 export async function updateSellerProduct(
   id: string,
-  updates: Partial<Omit<SellerProduct, "id" | "sellerId" | "createdAt">>
+  sellerId: string,
+  updates: Partial<Omit<SellerProduct, "id" | "sellerId" | "imageUrl" | "createdAt" | "updatedAt">>
 ): Promise<SellerProduct | null> {
-  const products = await getSellerProducts();
-  const index = products.findIndex((product) => product.id === id);
-  if (index === -1) return null;
-
-  const currentProduct = products[index];
-  const currentImages = currentProduct.images || (currentProduct.imageUrl ? [currentProduct.imageUrl] : []);
-  const nextImages = updates.images !== undefined ? updates.images : currentImages;
-
-  const updated: SellerProduct = {
-    ...currentProduct,
-    ...updates,
-    images: nextImages,
-    imageUrl: updates.imageUrl !== undefined ? updates.imageUrl : (nextImages[0] || null),
-    updatedAt: new Date().toISOString(),
-  };
-  products[index] = updated;
-  await writeJsonFile(PRODUCTS_FILE, products);
-  return updated;
+  await dbConnect();
+  if (!id.match(/^[0-9a-fA-F]{24}$/)) return null;
+  const product = await Product.findOneAndUpdate(
+    { _id: id, sellerId },
+    { $set: updates },
+    { new: true }
+  ).lean<ProductDoc>();
+  if (!product) return null;
+  return toSellerProduct(product);
 }
 
-export async function deleteSellerProduct(id: string): Promise<boolean> {
-  const products = await getSellerProducts();
-  const filtered = products.filter((product) => product.id !== id);
-  if (filtered.length === products.length) return false;
-  await writeJsonFile(PRODUCTS_FILE, filtered);
-  return true;
+export async function deleteSellerProduct(id: string, sellerId: string): Promise<boolean> {
+  await dbConnect();
+  if (!id.match(/^[0-9a-fA-F]{24}$/)) return false;
+  const result = await Product.findOneAndDelete({ _id: id, sellerId });
+  return Boolean(result);
 }
 
 export type ProductFilter = {
@@ -156,30 +178,39 @@ export type ProductFilter = {
   maxPrice?: number;
 };
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export async function searchProducts(filter: ProductFilter): Promise<SellerProduct[]> {
-  let products = await getSellerProducts();
+  await dbConnect();
+
+  const mongoFilter: Record<string, unknown> = {};
 
   if (filter.q) {
-    const query = filter.q.toLowerCase().trim();
-    products = products.filter(
-      (p) =>
-        p.title.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query)
-    );
+    const pattern = new RegExp(escapeRegExp(filter.q.trim()), "i");
+    mongoFilter.$or = [{ title: pattern }, { description: pattern }];
   }
 
   if (filter.category) {
-    const cat = filter.category.toLowerCase().trim();
-    products = products.filter((p) => p.category.toLowerCase() === cat);
+    mongoFilter.category = new RegExp(`^${escapeRegExp(filter.category.trim())}$`, "i");
   }
 
-  if (filter.minPrice !== undefined && !isNaN(filter.minPrice)) {
-    products = products.filter((p) => p.price >= filter.minPrice!);
+  if (filter.minPrice !== undefined || filter.maxPrice !== undefined) {
+    const priceFilter: Record<string, number> = {};
+    if (filter.minPrice !== undefined && !isNaN(filter.minPrice)) {
+      priceFilter.$gte = filter.minPrice;
+    }
+    if (filter.maxPrice !== undefined && !isNaN(filter.maxPrice)) {
+      priceFilter.$lte = filter.maxPrice;
+    }
+    if (Object.keys(priceFilter).length > 0) {
+      mongoFilter.price = priceFilter;
+    }
   }
 
-  if (filter.maxPrice !== undefined && !isNaN(filter.maxPrice)) {
-    products = products.filter((p) => p.price <= filter.maxPrice!);
-  }
-
-  return products;
+  const products = await Product.find(mongoFilter)
+    .sort({ createdAt: -1 })
+    .lean<ProductDoc[]>();
+  return products.map(toSellerProduct);
 }

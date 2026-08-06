@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { getSellerProducts, getSellerProfile } from "../lib/seller-data";
+import { getRecentProducts } from "../lib/seller-data";
 
 export default async function Home() {
   const products = [
@@ -37,10 +37,7 @@ export default async function Home() {
     { id: "30", title: "Artisan Glass Vase", price: "75.00" },
   ];
 
-  const [sellerProducts, sellerProfile] = await Promise.all([
-    getSellerProducts(),
-    getSellerProfile(),
-  ]);
+  const recentProducts = await getRecentProducts(8);
 
   return (
     <div className={styles.homeContainer}>
@@ -53,13 +50,11 @@ export default async function Home() {
         </Link>
       </section>
 
-      {sellerProducts.length > 0 && (
+      {recentProducts.length > 0 && (
         <section className={styles.sellerSection}>
-          <h2 className={styles.sellerSectionTitle}>
-            From {sellerProfile.shopName}
-          </h2>
+          <h2 className={styles.sellerSectionTitle}>New Arrivals</h2>
           <div className={styles.productGrid}>
-            {sellerProducts.map((product) => (
+            {recentProducts.map((product) => (
               <Link
                 href={`/product/${product.id}`}
                 key={product.id}

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "../../../../../auth";
 import {
   deleteSellerProduct,
   getSellerProductById,
@@ -23,6 +24,11 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
 export async function PUT(request: NextRequest, context: RouteContext) {
   try {
+    const session = await auth();
+    if (!session?.user || session.user.role !== "seller") {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    }
+
     const { id } = await context.params;
     const body = await request.json();
     const { title, description, price, category, images, stockQuantity } = body;
@@ -51,7 +57,6 @@ export async function PUT(request: NextRequest, context: RouteContext) {
         return NextResponse.json({ error: "At least one product image is required." }, { status: 400 });
       }
       updates.images = images.map((img) => img.trim());
-      updates.imageUrl = images[0] || null;
     }
 
     if (price !== undefined) {
@@ -70,7 +75,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       updates.stockQuantity = parsedStock;
     }
 
-    const product = await updateSellerProduct(id, updates);
+    const product = await updateSellerProduct(id, session.user.id, updates);
     if (!product) {
       return NextResponse.json({ error: "Product not found." }, { status: 404 });
     }
@@ -84,8 +89,13 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
+    const session = await auth();
+    if (!session?.user || session.user.role !== "seller") {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    }
+
     const { id } = await context.params;
-    const deleted = await deleteSellerProduct(id);
+    const deleted = await deleteSellerProduct(id, session.user.id);
     if (!deleted) {
       return NextResponse.json({ error: "Product not found." }, { status: 404 });
     }

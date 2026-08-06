@@ -39,8 +39,16 @@ const ProductSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 )
+
+// Existing UI code reads `product.imageUrl` as a single cover image;
+// derive it from `images` instead of storing a duplicate field.
+ProductSchema.virtual("imageUrl").get(function () {
+  return this.images?.[0] ?? null;
+});
 
 export default mongoose.models.Product || mongoose.model("Product", ProductSchema);

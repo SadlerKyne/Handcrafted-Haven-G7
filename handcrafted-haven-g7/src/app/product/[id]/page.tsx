@@ -5,6 +5,7 @@ import {
   getSellerProductById,
   getSellerProfile,
 } from "../../../lib/seller-data";
+import AddToCartButton from "../../../components/AddToCartButton";
 
 const getMockProduct = (id: string) => ({
   id,
@@ -26,20 +27,23 @@ export default async function ProductPage({
   const { id: productId } = await params;
 
   const sellerProduct = await getSellerProductById(productId);
-  const sellerProfile = sellerProduct ? await getSellerProfile() : null;
+  const sellerProfile = sellerProduct
+    ? await getSellerProfile(sellerProduct.sellerId)
+    : null;
 
   const product = sellerProduct
     ? {
       id: sellerProduct.id,
+      sellerId: sellerProduct.sellerId,
       title: sellerProduct.title,
       category: sellerProduct.category,
       artisan: sellerProfile?.shopName || sellerProfile?.name || "Artisan",
-      price: sellerProduct.price.toFixed(2),
+      price: sellerProduct.price,
       description: sellerProduct.description,
       stock_quantity: sellerProduct.stockQuantity,
       image_url: sellerProduct.imageUrl,
     }
-    : getMockProduct(productId);
+    : { ...getMockProduct(productId), sellerId: null, price: Number(getMockProduct(productId).price) };
 
   if (!sellerProduct && !productId.match(/^\d+$/)) {
     notFound();
@@ -82,27 +86,44 @@ export default async function ProductPage({
             <p className="text-lg text-[#6096ba] mb-6">
               Crafted by{" "}
               {sellerProfile ? (
-                <Link href="/seller/profile" className="underline hover:text-[#274c77]">
+                <Link href={`/shop/${sellerProfile.id}`} className="underline hover:text-[#274c77]">
                   {product.artisan}
+                  {sellerProfile.sellerVerified && (
+                    <span className="ml-1 text-[#274c77]" title="Verified seller">
+                      &#10003;
+                    </span>
+                  )}
                 </Link>
               ) : (
                 product.artisan
               )}
             </p>
 
-            <span className="text-4xl font-bold text-[#274c77] mb-8">${product.price}</span>
+            <span className="text-4xl font-bold text-[#274c77] mb-8">${product.price.toFixed(2)}</span>
 
             <div className="text-[#8b8c89] mb-10 leading-relaxed whitespace-pre-wrap">
               <p>{product.description}</p>
             </div>
 
             <div className="mt-auto">
-              <button
-                type="button"
-                className="w-full bg-[#274c77] hover:bg-[#6096ba] text-white font-bold py-4 rounded-full transition-colors shadow-md text-lg"
-              >
-                Add to Cart
-              </button>
+              {sellerProduct ? (
+                <AddToCartButton
+                  productId={sellerProduct.id}
+                  title={sellerProduct.title}
+                  price={sellerProduct.price}
+                  imageUrl={sellerProduct.imageUrl}
+                  sellerId={sellerProduct.sellerId}
+                  inStock={product.stock_quantity > 0}
+                />
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full bg-[#274c77] opacity-50 cursor-not-allowed text-white font-bold py-4 rounded-full shadow-md text-lg"
+                >
+                  Add to Cart
+                </button>
+              )}
               <p className="text-center text-sm text-[#8b8c89] mt-3">
                 {product.stock_quantity > 0
                   ? `${product.stock_quantity} available in stock`
