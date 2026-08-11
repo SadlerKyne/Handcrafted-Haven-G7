@@ -3,6 +3,7 @@ import { auth } from "../../../auth";
 import dbConnect from "../../../lib/dbConnect";
 import Product from "../../../models/Product";
 import Order from "../../../models/Order";
+import { createOrderNotifications } from "../../../lib/seller-data";
 
 type OrderLineInput = { productId: string; quantity: number };
 
@@ -100,6 +101,17 @@ export async function POST(request: NextRequest) {
       shippingAddress,
       total,
     });
+
+    await createOrderNotifications(
+      orderItems.map((item) => ({
+        sellerId: item.sellerId.toString(),
+        orderId: order._id.toString(),
+        productId: item.productId.toString(),
+        productTitle: item.title,
+        quantity: item.quantity,
+        buyerName: shippingAddress.name,
+      }))
+    );
 
     return NextResponse.json({ id: order._id.toString() }, { status: 201 });
   } catch (error) {

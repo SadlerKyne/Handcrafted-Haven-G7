@@ -1,6 +1,7 @@
 import dbConnect from "./dbConnect";
 import User from "../models/User";
 import Product from "../models/Product";
+import Notification from "../models/Notification";
 
 export type SellerProfile = {
   id: string;
@@ -28,6 +29,28 @@ export type SellerProduct = {
   stockQuantity: number;
   createdAt: string;
   updatedAt: string;
+};
+
+export type SellerNotification = {
+  id: string;
+  orderId: string;
+  productId: string;
+  productTitle: string;
+  quantity: number;
+  buyerName: string;
+  read: boolean;
+  createdAt: string;
+};
+
+type NotificationDoc = {
+  _id: { toString(): string };
+  orderId: { toString(): string };
+  productId: { toString(): string };
+  productTitle: string;
+  quantity: number;
+  buyerName: string;
+  read: boolean;
+  createdAt?: Date;
 };
 
 type UserDoc = {
@@ -213,4 +236,52 @@ export async function searchProducts(filter: ProductFilter): Promise<SellerProdu
     .sort({ createdAt: -1 })
     .lean<ProductDoc[]>();
   return products.map(toSellerProduct);
+}
+
+function toSellerNotification(notification: NotificationDoc): SellerNotification {
+  return {
+    id: notification._id.toString(),
+    orderId: notification.orderId.toString(),
+    productId: notification.productId.toString(),
+    productTitle: notification.productTitle,
+    quantity: notification.quantity,
+    buyerName: notification.buyerName,
+    read: notification.read,
+    createdAt: (notification.createdAt ?? new Date()).toISOString(),
+  };
+}
+
+export type OrderNotificationInput = {
+  sellerId: string;
+  orderId: string;
+  productId: string;
+  productTitle: string;
+  quantity: number;
+  buyerName: string;
+};
+
+export async function createOrderNotifications(inputs: OrderNotificationInput[]): Promise<void> {
+  if (inputs.length === 0) return;
+  await dbConnect();
+  await Notification.insertMany(inputs);
+}
+
+export async function getSellerNotifications(sellerId: string): Promise<SellerNotification[]> {
+  await dbConnect();
+  const notifications = await Notification.find({ sellerId })
+    .sort({ createdAt: -1 })
+    .lean<NotificationDoc[]>();
+  return notifications.map(toSellerNotification);
+}
+
+export async function markNotificationRead(id: string, sellerId: string): Promise<boolean> {
+  await dbConnect();
+  if (!id.match(/^[0-9a-fA-F]{24}$/)) return false;
+  const result = await Notification.updateOne({ _id: id, sellerId }, { $set: { read: true } });
+  return result.matchedCount > 0;
+}
+
+export async function markAllNotificationsRead(sellerId: string): Promise<void> {
+  await dbConnect();
+  await Notification.updateMany({ sellerId, read: false }, { $set: { read: true } });
 }

@@ -5,7 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import ImageUpload from "../../components/ImageUpload";
+import SellerNotifications from "./SellerNotifications";
 import type { SellerProfile } from "../../lib/seller-data";
+
+type ProfileTab = "profile" | "notifications";
 
 const emptyProfile: SellerProfile = {
   id: "",
@@ -27,6 +30,8 @@ export default function SellerProfileForm() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<ProfileTab>("profile");
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     fetch("/api/seller/profile")
@@ -35,6 +40,15 @@ export default function SellerProfileForm() {
       .catch(() => setError("Could not load profile."))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    fetch("/api/seller/notifications")
+      .then((res) => res.json())
+      .then((data: { read: boolean }[]) =>
+        setUnreadCount(Array.isArray(data) ? data.filter((n) => !n.read).length : 0)
+      )
+      .catch(() => setUnreadCount(0));
+  }, [tab]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -99,12 +113,33 @@ export default function SellerProfileForm() {
             <p className="text-sm text-[#8b8c89] mt-1">{profile.location}</p>
           </div>
           <nav className="space-y-2 text-sm">
-            <Link
-              href="/seller/profile"
-              className="block px-3 py-2 rounded-md bg-[#e7ecef] text-[#274c77] font-medium"
+            <button
+              type="button"
+              onClick={() => setTab("profile")}
+              className={`w-full text-left flex items-center px-3 py-2 rounded-md transition-colors ${
+                tab === "profile"
+                  ? "bg-[#e7ecef] text-[#274c77] font-medium"
+                  : "text-[#6096ba] hover:bg-[#e7ecef]"
+              }`}
             >
               Profile & Shop Info
-            </Link>
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("notifications")}
+              className={`w-full text-left flex items-center justify-between px-3 py-2 rounded-md transition-colors ${
+                tab === "notifications"
+                  ? "bg-[#e7ecef] text-[#274c77] font-medium"
+                  : "text-[#6096ba] hover:bg-[#e7ecef]"
+              }`}
+            >
+              Notifications
+              {unreadCount > 0 && (
+                <span className="text-xs text-white bg-[#274c77] rounded-full px-2 py-0.5">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
             <Link
               href="/dashboard"
               className="block px-3 py-2 rounded-md text-[#6096ba] hover:bg-[#e7ecef] transition-colors"
@@ -115,6 +150,11 @@ export default function SellerProfileForm() {
         </div>
       </aside>
 
+      {tab === "notifications" ? (
+        <div className="md:col-span-2">
+          <SellerNotifications />
+        </div>
+      ) : (
       <form onSubmit={handleSubmit} className="md:col-span-2 space-y-6">
         <div className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
           <h2 className="text-lg font-bold text-[#274c77] mb-4">Shop Details</h2>
@@ -223,6 +263,7 @@ export default function SellerProfileForm() {
           </Link>
         </div>
       </form>
+      )}
     </div>
   );
 }
