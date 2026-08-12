@@ -21,7 +21,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
 
   const fetchReviews = async () => {
     try {
-      const res = await fetch(`/api/products/${productId}/reviews`);
+      const res = await fetch(`/api/reviews?productId=${productId}`);
       if (res.ok) {
         const data = await res.json();
         setReviews(data);
@@ -43,7 +43,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
     setError("");
 
     try {
-      const res = await fetch(`/api/products/${productId}/reviews`, {
+      const res = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rating, comment }),

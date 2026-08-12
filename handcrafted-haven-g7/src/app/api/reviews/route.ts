@@ -3,13 +3,20 @@ import { auth } from "../../../auth";
 import dbConnect from "../../../lib/dbConnect";
 import Review from "../../../models/Reviews";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+// GET /api/reviews?productId=123
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const productId = searchParams.get("productId");
+
+    if (!productId) {
+      return NextResponse.json(
+        { error: "Product ID parameter is required" },
+        { status: 400 }
+      );
+    }
+
     await dbConnect();
-    const { id: productId } = await params;
     const reviews = await Review.find({ productId }).sort({ createdAt: -1 });
     return NextResponse.json(reviews);
   } catch {
@@ -20,10 +27,8 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+// POST /api/reviews
+export async function POST(req: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
@@ -31,12 +36,11 @@ export async function POST(
     }
 
     await dbConnect();
-    const { id: productId } = await params;
-    const { rating, comment } = await req.json();
+    const { productId, rating, comment } = await req.json();
 
-    if (!rating || !comment) {
+    if (!productId || !rating || !comment) {
       return NextResponse.json(
-        { error: "Rating and comment are required" },
+        { error: "Product ID, rating, and comment are required" },
         { status: 400 }
       );
     }
