@@ -6,6 +6,7 @@ import {
   getSellerProfile,
 } from "../../../lib/seller-data";
 import AddToCartButton from "../../../components/AddToCartButton";
+import ProductReviews from "../../../components/ProductReviews";
 
 const getMockProduct = (id: string) => ({
   id,
@@ -59,6 +60,7 @@ export default async function ProductPage({
           &larr; Back to Marketplace
         </Link>
 
+        {/* Product Main Card */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 bg-white p-6 md:p-12 rounded-2xl shadow-sm border border-transparent hover:border-[#a3cef1] transition-colors">
           <div className="w-full aspect-square bg-[#e7ecef] rounded-xl overflow-hidden relative">
             {product.image_url ? (
@@ -132,6 +134,9 @@ export default async function ProductPage({
             </div>
           </div>
         </div>
+
+        {/* Integrated Review Section */}
+        <ProductReviews productId={productId} />
       </div>
     </div>
   );
