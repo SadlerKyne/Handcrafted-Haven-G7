@@ -46,7 +46,7 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center justify-end gap-6 md:w-1/3">
             {session?.user?.role === "seller" && (
-              <Link href="/dashboard" className={`flex items-center gap-2 ${navLinkClass}`}>
+              <Link href="/seller/profile" className={`flex items-center gap-2 ${navLinkClass}`}>
                 <span>Seller</span>
               </Link>
             )}
