@@ -20,7 +20,7 @@ export const proxy = auth((req) => {
   );
 
   if (isSellerOnlyPath && req.auth.user?.role !== "seller") {
-    return NextResponse.redirect(new URL("/profile", req.nextUrl.origin));
+    return NextResponse.redirect(new URL("/seller/profile", req.nextUrl.origin));
   }
 });
 
