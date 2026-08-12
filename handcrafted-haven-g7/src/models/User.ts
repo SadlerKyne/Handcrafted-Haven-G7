@@ -1,6 +1,20 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, type Document, type Model } from "mongoose";
 
-const UserSchema = new mongoose.Schema(
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  passwordHash: string;
+  role: "buyer" | "seller";
+  shopName: string;
+  bio: string;
+  avatarUrl: string | null;
+  location: string;
+  sellerVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const UserSchema = new Schema<IUser>(
   {
     name: { type: String, required: true, trim: true },
     email: {
@@ -22,7 +36,8 @@ const UserSchema = new mongoose.Schema(
     // display badge, not an access gate.
     sellerVerified: { type: Boolean, default: false },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-export default mongoose.models.User || mongoose.model("User", UserSchema);
+export default (mongoose.models.User as Model<IUser>) ||
+  mongoose.model<IUser>("User", UserSchema);
