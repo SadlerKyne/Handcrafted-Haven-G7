@@ -21,6 +21,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
 
   const fetchReviews = async () => {
     try {
+      // Pass productId in query param
       const res = await fetch(`/api/reviews?productId=${productId}`);
       if (res.ok) {
         const data = await res.json();
@@ -43,10 +44,11 @@ export default function ProductReviews({ productId }: { productId: string }) {
     setError("");
 
     try {
+      // Include productId along with rating and comment
       const res = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rating, comment }),
+        body: JSON.stringify({ productId, rating, comment }),
       });
 
       if (!res.ok) {
@@ -89,7 +91,6 @@ export default function ProductReviews({ productId }: { productId: string }) {
         </div>
       </div>
 
-      {/* Write a Review Form */}
       {session?.user ? (
         <form onSubmit={handleSubmit} className="mb-10 bg-[#e7ecef] p-6 rounded-xl">
           <h3 className="text-lg font-semibold text-[#274c77] mb-3">Leave a Review</h3>
@@ -141,7 +142,6 @@ export default function ProductReviews({ productId }: { productId: string }) {
         </p>
       )}
 
-      {/* Review List */}
       <div className="space-y-6">
         {reviews.length === 0 ? (
           <p className="text-[#8b8c89]">No reviews yet. Be the first to review!</p>
